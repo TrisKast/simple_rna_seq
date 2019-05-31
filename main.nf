@@ -17,17 +17,16 @@ log.info """\
 multiqc_file = file(params.multiqc)
 
 Channel
-    .fromPath( params.index )
-    .ifEmpty { error "Cannot find any index matching: ${params.index}" }
-    .into {index_ch}
-
+    .fromFilePairs( params.reads )
+    .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
+    .into { read_pairs_ch; read_pairs2_ch }
 
 if (params.index){
 
-    Channel
-        .fromFilePairs( params.reads )
-        .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
-        .into { index_ch }
+  Channel
+      .fromPath( params.index )
+      .ifEmpty { error "Cannot find any index matching: ${params.index}" }
+      .into {index_ch}
 
 } else {
 
